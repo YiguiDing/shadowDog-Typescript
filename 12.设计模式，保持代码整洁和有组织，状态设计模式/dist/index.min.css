@@ -1,0 +1,1 @@
+*{padding:0;margin:0;box-sizing:border-box;overflow:hidden;font:50px italic;color:#fff}body,html{position:relative;width:100vw;height:100vh;background:#000}body #loading,body #myCanvas,html #loading,html #myCanvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:100vw;max-height:100vh}
