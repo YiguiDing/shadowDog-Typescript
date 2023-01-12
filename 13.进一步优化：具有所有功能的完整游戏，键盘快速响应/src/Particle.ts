@@ -18,30 +18,28 @@ export abstract class Particle {
 // 灰尘
 export class Dust extends Particle {
 	radius: number;
-	fillStyleAlpha: number;
+	globalAlpha: number;
 	fillStyle: string;
 	radiusStep: number;
-	fillStyleAlphaStep: number;
+	globalAlphaStep: number;
 	constructor(posX: number, posY: number) {
 		super(RandomRange(posX - 50, posX + 50), RandomRange(posY - 20, posY + 20));
 
 		this.radius = RandomRange(10, 20);
 		this.radiusStep = RandomRange(0.3, 0.5);
 
-		this.fillStyleAlpha = 1;
-		this.fillStyleAlphaStep = 0.01;
+		this.globalAlpha = 1;
+		this.globalAlphaStep = 0.01;
 
-		this.fillStyle = `rgba(0,0,0,${this.fillStyleAlpha})`;
+		this.fillStyle = "rgba(0,0,0)";
 	}
 	update(timeInterval: number): void {
-		if (this.fillStyleAlpha > this.fillStyleAlphaStep) {
-			this.fillStyleAlpha -= this.fillStyleAlphaStep;
-			this.fillStyle = `rgba(0,0,0,${this.fillStyleAlpha})`;
-		}
+		if (this.globalAlpha > this.globalAlphaStep) this.globalAlpha -= this.globalAlphaStep;
 		if (this.radius > this.radiusStep) this.radius -= this.radiusStep;
 	}
 	draw(Context2D: CanvasRenderingContext2D): void {
 		Context2D.save();
+		Context2D.globalAlpha = this.globalAlpha;
 		Context2D.fillStyle = this.fillStyle;
 		Context2D.beginPath();
 		Context2D.arc(this.posX, this.posY, this.radius, 0, Math.PI * 2);
@@ -52,9 +50,9 @@ export class Dust extends Particle {
 class FireYelow extends Particle {
 	radius: number;
 	movespeedX: number;
-	fillStyleAlpha: number;
+	globalAlpha: number;
 	fillStyle: string;
-	alphaStep: number;
+	globalAlphaStep: number;
 	radiusStep: number;
 	constructor(posX: number, posY: number, movespeedX: number) {
 		super(RandomRange(posX - 50, posX + 50), RandomRange(posY - 50, posY + 50));
@@ -63,15 +61,14 @@ class FireYelow extends Particle {
 		this.radius = RandomRange(0, 125);
 		this.radiusStep = RandomRange(0.01, 5);
 
-		this.fillStyleAlpha = RandomRange(0.8, 1);
-		this.alphaStep = RandomRange(0.01, 0.1);
+		this.globalAlpha = RandomRange(0.8, 1);
+		this.globalAlphaStep = RandomRange(0.01, 0.1);
 
-		this.fillStyle = `rgba(255,255,0,${this.fillStyleAlpha})`;
+		this.fillStyle = "rgb(255,255,0)";
 	}
 	update(timeInterval: number): void {
-		if (this.fillStyleAlpha > this.alphaStep) {
-			this.fillStyleAlpha -= this.alphaStep;
-			this.fillStyle = `rgba(255,255,0,${this.fillStyleAlpha})`;
+		if (this.globalAlpha > this.globalAlphaStep) {
+			this.globalAlpha -= this.globalAlphaStep;
 		}
 		if (this.radius > this.radiusStep) this.radius -= this.radiusStep;
 
@@ -79,6 +76,7 @@ class FireYelow extends Particle {
 	}
 	draw(Context2D: CanvasRenderingContext2D): void {
 		Context2D.save();
+		Context2D.globalAlpha = this.globalAlpha;
 		Context2D.fillStyle = this.fillStyle;
 		Context2D.beginPath();
 		Context2D.arc(this.posX, this.posY, this.radius, 0, Math.PI * 2);
@@ -88,7 +86,6 @@ class FireYelow extends Particle {
 }
 export class FireImg extends Particle {
 	img: HTMLImageElement;
-	movespeedX: number;
 	imgHeight: number;
 	imgWidth: number;
 	drawHeight: number;
@@ -99,8 +96,6 @@ export class FireImg extends Particle {
 	drawSizeStep: number;
 	constructor(posX: number, posY: number, movespeedX: number) {
 		super(RandomRange(posX - 10, posX + 10), RandomRange(posY - 10, posY + 10));
-		this.movespeedX = movespeedX;
-
 		this.img = new Image();
 		this.img.src = "./imgs/fire.png";
 		this.imgWidth = 100;
@@ -120,7 +115,6 @@ export class FireImg extends Particle {
 			this.drawWidth = this.imgWidth * this.drawSize;
 			this.drawHeight = this.imgHeight * this.drawSize;
 		}
-		this.posX += this.movespeedX * timeInterval;
 	}
 	draw(Context2D: CanvasRenderingContext2D): void {
 		Context2D.save();
